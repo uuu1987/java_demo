@@ -25,7 +25,7 @@ public class MemberService {
   
     public void signup(Member mm){
           if (mm.getUserID() == null || mm.getUserID().isEmpty()){
-               throw new IllegalArgumentException( "아이디를 입력해주세요.33333");
+               throw new IllegalArgumentException( "아이디를 입력해주세요.44444");
           }
           if (mm.getPwd() == null || mm.getPwd().isEmpty() || mm.getPwd().length() < 8){
                throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
