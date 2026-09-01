@@ -6,6 +6,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.member.Member;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 @Service
 public class PostService {
     private final PostRepository postRepository;
@@ -23,7 +30,7 @@ public class PostService {
         return postRepository.findById(id).orElse(null);
     }
 
-    public void addPost(Post p, String writer){
+    public void addPost(Post p, Member writer){
         p.setWriter(writer);
         p.setRegDate(LocalDateTime.now().toString());
         postRepository.save(p);
@@ -59,4 +66,15 @@ public class PostService {
             return false;
         }
     }
+
+    public Page<Post> findPosts(int page, int size, String keyword, String sort){
+        Sort sortop = sort.equals("asc") ? Sort.by("id").ascending() : Sort.by("id").descending();
+        Pageable pageable = PageRequest.of(page, size, sortop);
+        if (keyword == null || keyword.isEmpty()) {
+            return postRepository.findAll(pageable);
+        }else{
+            return postRepository.findByTitleContaining(keyword, pageable);
+        }
+    }
+
 }

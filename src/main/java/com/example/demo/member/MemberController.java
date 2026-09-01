@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @RestController
 public class MemberController {
@@ -22,52 +23,47 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody Member m){
-        
-        try{
-            memberService.signup(m);
-            return ResponseEntity.status(200).body("회원가입 성공"+m.getUserID());
-        } catch (DuplicateUserException e){
-            return ResponseEntity.status(409).body("회원가입 실패: "+e.getMessage());  
-            
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.status(400).body("회원가입 실패: "+e.getMessage());
-        }
-        /* 
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest req){
 
-        String success = memberService.signup(m);
-        if (success == null){
-            return ResponseEntity.status(201).body("회원가입 성공"+m.getUserID());
-        }
-        else if(success.equals("DUPLICATE")){
-            return ResponseEntity.status(409).body("회원가입 실패: 이미 존재하는 아이디입니다.");         
-        }
-        else
-        {
-            return ResponseEntity.status(400).body("회원가입 실패: "+success);
-        }
-        */
+        Member m = new Member();
+        m.setUserID(req.getUserID());
+        m.setUserName(req.getUserName());
+        m.setPwd(req.getPwd());
+        m.setEmail(req.getEmail());
+ 
+        memberService.signup(m);
+        return ResponseEntity.status(201).body("회원가입 성공"+m.getUserID());
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Member mm, HttpSession session){
-       try{
-            memberService.login(mm.getUserID(),mm.getPwd());
-            session.setAttribute("userID", mm.getUserID());
-            return ResponseEntity.status(200).body("로그인 성공");
-       } catch (LoginFailException e){
-            return ResponseEntity.status(401).body("로그인 실패" + e.getMessage());
-       }
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest mm, HttpSession session){
+        memberService.login(mm.getUserID(), mm.getPwd());
+        session.setAttribute("userID", mm.getUserID());
+        return ResponseEntity.status(200).body("로그인 성공");
+
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<String> mypage(HttpSession session){
+    public ResponseEntity<?> mypage(HttpSession session){
         String userID = (String) session.getAttribute("userID");
+
         if (userID == null){
             return ResponseEntity.status(401).body("로그인 필요");
         }
+        
+        Member m = memberService.findByUserID(userID);
+        MemberResponse res = new MemberResponse();
+        res.setId(m.getId());
+        res.setUserID(m.getUserID());
+        res.setUserName(m.getUserName());
+        res.setEmail(m.getEmail());
+
+        return ResponseEntity.status(200).body(res);
+
+
+        /*
         else{
-            // 임시 검증용 — SecurityContext에 뭐가 들었는지 같이 확인
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
@@ -76,6 +72,7 @@ public class MemberController {
                 "마이페이지 접근 성공: " + userID + " | [SecurityContext] " + securityInfo
             );
         }
+             */
 
     }
 

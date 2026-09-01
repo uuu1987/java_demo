@@ -1,9 +1,13 @@
 package com.example.demo.post;
 
+
+import com.example.demo.member.Member;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,7 +19,8 @@ public class Post {
     private Long id;
     private String title;
     private String content;
-    private String writer;
+    @ManyToOne
+    private Member writer;
     private String RegDate;
 
 
@@ -45,11 +50,11 @@ public class Post {
         this.content = content;
     }
 
-    public String getWriter(){
+    public Member getWriter(){
         return writer;
     }
 
-    public void setWriter(String writer){
+    public void setWriter(Member writer){
         this.writer = writer;
     }
 

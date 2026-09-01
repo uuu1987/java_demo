@@ -2,10 +2,11 @@ package com.example.demo.post;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.member.Member;
+
 import jakarta.servlet.http.HttpSession;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 
@@ -26,9 +28,14 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<Post> posts(){
-        return postService.findAll();
+    public Page<Post> posts(@RequestParam(value="page", defaultValue =  "0") int page
+    , @RequestParam(value = "size", defaultValue = "10") int size
+    , @RequestParam(value="keyword", required = false) String keyword
+    , @RequestParam(value="sort", defaultValue = "desc") String sort
+    ){
+        return postService.findPosts(page, size, keyword, sort);
     }
+
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<Post> getPost(@PathVariable("id") Long id) {
@@ -41,9 +48,8 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-
     public ResponseEntity<String> addPost(@RequestBody Post p, HttpSession session){
-        String userID = (String) session.getAttribute("userID");
+        Member userID = (Member) session.getAttribute("userID");
         postService.addPost(p, userID);
         return ResponseEntity.status(201).body("추가완료");
     }
@@ -82,5 +88,5 @@ public class PostController {
         postService.updateById(id, updatedInfo);
         return ResponseEntity.status(200).body("수정 완료 "+ id+" / 제목"+ updatedInfo.getTitle());
     }
-    
+ 
 }

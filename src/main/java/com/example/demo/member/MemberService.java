@@ -1,6 +1,5 @@
 package com.example.demo.member;
 
-import java.util.regex.Pattern;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
-    private static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
     private final AuthenticationManager authenticationManager;
 
 
@@ -24,21 +22,6 @@ public class MemberService {
 
   
     public void signup(Member mm){
-          if (mm.getUserID() == null || mm.getUserID().isEmpty()){
-               throw new IllegalArgumentException( "아이디를 입력해주세요.44444");
-          }
-          if (mm.getPwd() == null || mm.getPwd().isEmpty() || mm.getPwd().length() < 8){
-               throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
-          }   
-          if (mm.getUserName() == null || mm.getUserName().isEmpty()){
-               throw new IllegalArgumentException( "이름을 입력해주세요.");
-          }
-
-
-          if (mm.getEmail() == null || mm.getEmail().isEmpty() || !Pattern.matches(EMAIL_REGEX, mm.getEmail())){
-               throw new IllegalArgumentException("올바른 이메일 주소를 입력해주세요.");
-          }
-          
 
           if (memberRepository.existsByUserID(mm.getUserID())){
                throw new DuplicateUserException("이미 존재하는 아이디입니다.");
@@ -49,8 +32,6 @@ public class MemberService {
           String hashed = passwordEncoder.encode(mm.getPwd());
           mm.setPwd(hashed);
           memberRepository.save(mm);
-          //return null;
-          
 
     }
 
@@ -70,6 +51,10 @@ public class MemberService {
           context.setAuthentication(authResult);
           SecurityContextHolder.setContext(context);
      
+    }
+
+    public Member findByUserID(String userID){
+          return memberRepository.findByUserID(userID);
     }
 
 }
