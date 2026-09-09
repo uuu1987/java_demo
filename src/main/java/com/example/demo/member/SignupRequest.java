@@ -3,6 +3,13 @@ package com.example.demo.member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter 
+@Setter 
+@NoArgsConstructor 
 
 public class SignupRequest {
     @NotBlank(message = "아이디를 입력하세요")
@@ -18,34 +25,4 @@ public class SignupRequest {
     @Email(message = "올바른 이메일이 아닙니다.")
     private String email;
 
-    public SignupRequest(){
-
-    }
-    
-
-
-    public String getUserID(){
-        return userID;
-    }
-    public void setUserID(String userID){
-        this.userID = userID;
-    }
-    public String getPwd(){
-        return pwd;
-    }
-    public void setPwd(String pwd){
-        this.pwd = pwd;
-    }
-    public String getUserName(){
-        return userName;
-    }
-    public void setUserName(String userName){
-        this.userName = userName;
-    }
-    public String getEmail(){
-        return email;
-    }
-    public void setEmail(String email){
-        this.email = email;
-    }
 }

@@ -9,6 +9,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(new LoginCheckInterceptor()).addPathPatterns("/mypage", "/logout", "/posts", "/posts/**");
+        registry.addInterceptor(new LoginCheckInterceptor()).addPathPatterns("/mypage", "/logout", "/posts", "/posts/**", "/comments", "/comments/**", "/file", "/file/**");
     }
 }

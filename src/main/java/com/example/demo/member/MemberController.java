@@ -9,16 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor 
 public class MemberController {
   
     private final MemberService memberService;
 
-    public MemberController(MemberService memberService){
-
-        this.memberService = memberService;
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest req){
@@ -51,26 +49,8 @@ public class MemberController {
         }
         
         Member m = memberService.findByUserID(userID);
-        MemberResponse res = new MemberResponse();
-        res.setId(m.getId());
-        res.setUserID(m.getUserID());
-        res.setUserName(m.getUserName());
-        res.setEmail(m.getEmail());
+        return ResponseEntity.status(200).body(MemberResponse.from(m));
 
-        return ResponseEntity.status(200).body(res);
-
-
-        /*
-        else{
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-
-            String securityInfo = (auth != null) ? auth.getName() + "/" + auth.isAuthenticated() : "SecurityContext 비어있음";
-            return ResponseEntity.status(200).body(
-                "마이페이지 접근 성공: " + userID + " | [SecurityContext] " + securityInfo
-            );
-        }
-             */
 
     }
 

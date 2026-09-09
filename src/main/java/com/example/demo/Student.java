@@ -3,10 +3,16 @@ package com.example.demo;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id; 
+import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter; 
 
 
 @Entity   // "이 클래스는 DB 테이블과 연결된다"
+@Getter 
+@Setter 
+@NoArgsConstructor 
 public class Student {
 
     @Id
@@ -25,37 +31,16 @@ public class Student {
         this.math = math;
     }
     
-    public Student() {
-    }
 
-    public void setName(String name) { this.name = name; }
-    public void setKor(int kor) { this.kor = kor; }
-    public void setEng(int eng) { this.eng = eng; }
-    public void setMath(int math) { this.math = math; }
 
     public double getAverage(){
         int sum = kor+eng+math;
         return (double) sum/3;
     }
 
-    public String getName(){
-        return name;
-    }
-
-    public int getKor(){
-        return kor;
-    }
-    public int getEng(){
-        return eng;
-    }
-    public int getMath(){
-        return math;
-    }
 
     public boolean isPass() {
         return getAverage() >= 60;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 }

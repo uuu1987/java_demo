@@ -8,19 +8,18 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor 
 public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthenticationManager authenticationManager;
 
-
-    public MemberService(MemberRepository memberRepository, AuthenticationManager authenticationManager) {
-        this.memberRepository = memberRepository;
-        this.authenticationManager = authenticationManager;
-    }   
-
-  
+    @Transactional 
     public void signup(Member mm){
 
           if (memberRepository.existsByUserID(mm.getUserID())){

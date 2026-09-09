@@ -2,7 +2,15 @@ package com.example.demo.member;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @JsonPropertyOrder({"id", "userID", "userName", "email"})
+
+@Getter 
+@Setter 
+@NoArgsConstructor 
 public class MemberResponse {
     private Long id;
     private String userID;
@@ -10,34 +18,13 @@ public class MemberResponse {
     private String email;
 
 
-    public MemberResponse(){}
-
-    public Long getId(){
-        return id;
-    }
-    public void setId(Long id){
-        this.id = id;
-    }
-
-    public String getUserID(){
-        return userID;
-    }
-    public void setUserID(String userID){
-        this.userID = userID;
-    }
-
-    public String getUserName(){
-        return userName;
-    }
-    public void setUserName(String userName){
-        this.userName = userName;
-    }
-
-    public String getEmail(){
-        return email;
-    }
-    public void setEmail(String email){
-        this.email = email;
+    public static MemberResponse from(Member member){
+        MemberResponse res = new MemberResponse();
+        res.setId(member.getId());
+        res.setUserID(member.getUserID());
+        res.setUserName(member.getUserName());
+        res.setEmail(member.getEmail());
+        return res;
     }
 
 
