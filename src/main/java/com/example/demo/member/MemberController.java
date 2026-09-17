@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequiredArgsConstructor 
@@ -17,7 +18,7 @@ public class MemberController {
   
     private final MemberService memberService;
 
-
+    @Operation(summary = "회원가입", description = "아이디/비밀번호/이름/이메일을 받아 신규 회원을 등록한다.")
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequest req){
 

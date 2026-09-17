@@ -12,10 +12,12 @@ import com.example.demo.post.comment.Comment;
 import com.example.demo.post.comment.CommentRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor 
+@Slf4j
 public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
@@ -23,8 +25,11 @@ public class PostLikeService {
 
     @Transactional 
     public LikeResponse togglePostLike(Long postId, Member member){
+        log.debug("togglePostLike 진입, postId={}, memberId={}", postId, member.getId());
+
         Post post = postRepository.findById(postId).orElse(null);
         if (post == null){
+            log.warn("좋아요 대상 게시글 없음: postId={}", postId);
             return null;
         }
         
@@ -40,13 +45,19 @@ public class PostLikeService {
 
         boolean liked = existing.isEmpty();
         long count = postLikeRepository.countByPostId(postId);
+        log.info("게시글 좋아요 토글 완료: postId={}, memberId={}, liked={}, count={}", postId, member.getId(), liked, count);
         return new LikeResponse(liked, count);
     }
 
     @Transactional
     public LikeResponse toggleCommentLike(Long commentId, Member member){
+        log.debug("toggleCommentLike 진입, commentId={}, memberId={}", commentId, member.getId());
+
         Comment comment = commentRepository.findById(commentId).orElse(null);
-        if (comment == null) return null;
+        if (comment == null) {
+            log.warn("좋아요 대상 댓글 없음: commentId={}", commentId);
+            return null;
+        }
 
         Optional<PostLike> existing = postLikeRepository.findByCommentIdAndMemberId(commentId, member.getId());
 
@@ -61,6 +72,7 @@ public class PostLikeService {
 
         boolean liked = existing.isEmpty();
         long count = postLikeRepository.countByCommentId(commentId);
+        log.info("댓글 좋아요 토글 완료: commentId={}, memberId={}, liked={}, count={}", commentId, member.getId(), liked, count);
         return new LikeResponse(liked, count);
     }
 }
