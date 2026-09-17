@@ -59,10 +59,6 @@ public class MemberController {
     public ResponseEntity<?> mypage(HttpSession session){
         String userID = (String) session.getAttribute("userID");
 
-        if (userID == null){
-            return ResponseEntity.status(401).body("로그인 필요");
-        }
-        
         Member m = memberService.findByUserID(userID);
         return ResponseEntity.status(200).body(MemberResponse.from(m));
 
@@ -76,13 +72,10 @@ public class MemberController {
     })
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpSession session){
-        String userId = (String) session.getAttribute("userID");
-        if (userId != null){
+     
             session.invalidate();
             return ResponseEntity.status(200).body("로그아웃 성공"); 
-        }else{
-            return ResponseEntity.status(401).body("로그인 상태가 아닙니다.");
-        }
+      
     }
 
 }
