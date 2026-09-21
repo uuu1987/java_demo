@@ -3,6 +3,7 @@ package com.example.demo.post;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.common.PageResponse;
 import com.example.demo.member.Member;
 import com.example.demo.member.MemberService;
 
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.common.PageResponse;
 
 
 
@@ -44,14 +46,14 @@ public class PostController {
         @ApiResponse(responseCode = "200", description = "조회 성공")
     })
     @GetMapping
-    public Page<PostResponse> posts(@Parameter(description = "페이지 번호 (0부터 시작)") @RequestParam(value="page", defaultValue =  "0") int page
+    public PageResponse<PostResponse> posts(@Parameter(description = "페이지 번호 (0부터 시작)") @RequestParam(value="page", defaultValue =  "0") int page
     ,@Parameter(description = "페이지당 게시글 개수 (기본값 10)")  @RequestParam(value = "size", defaultValue = "10") int size
     ,@Parameter(description = "검색어 (선택 입력, 비우면 전체 조회)")  @RequestParam(value="keyword", required = false) String keyword
     ,@Parameter(description = "정렬 (기본값 : 내림차순)")  @RequestParam(value="sort", defaultValue = "desc") String sort
     ,@Parameter(description = "검색조건 (기본값 : title)")  @RequestParam(value="searchType", defaultValue = "title") String searchType
     ){
         Page<Post> posts = postService.findPosts(page, size, searchType, keyword, sort);
-        return posts.map(PostResponse::from);
+        return PageResponse.from(posts.map(PostResponse::from));
     }
 
     @Operation(summary = "게시글 단건 조회", description = "게시글 하나만 조회")
