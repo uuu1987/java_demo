@@ -31,7 +31,7 @@ public class PostFileController {
 
     @Operation(summary = "파일 업로드", description = "게시글에 첨부파일을 업로드한다.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "업로드 성공"),
+        @ApiResponse(responseCode = "201", description = "업로드 성공"),
         @ApiResponse(responseCode = "401", description = "로그인 필요"),
         @ApiResponse(responseCode = "404", description = "게시글 없음")
     })
@@ -41,7 +41,7 @@ public class PostFileController {
        if (saved == null){
             return ResponseEntity.status(404).body("게시판을 찾을 수 없음");
         }
-        return ResponseEntity.status(200).body(PostFileResponse.from(saved));
+        return ResponseEntity.status(201).body(PostFileResponse.from(saved));
     
     }
 
